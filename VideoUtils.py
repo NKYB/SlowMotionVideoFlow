@@ -28,7 +28,7 @@ class VideoUtils:
         return index
 
     def rnd_folder_label(self):
-        return ''.join([random.choice(string.ascii_letters + string.digits) for n in xrange(16)])
+        return ''.join([random.choice(string.ascii_letters + string.digits) for n in range(16)])
 
     def extract_frames(self, video_file, output_folder):
 
@@ -54,8 +54,8 @@ class VideoUtils:
 
     def sliding_window(self, image, stepSize=200, windowSize=(256,256)):
         # slide a window across the image
-        for y in xrange(0, image.shape[0], stepSize):
-            for x in xrange(0, image.shape[1], stepSize):
+        for y in range(0, image.shape[0], stepSize):
+            for x in range(0, image.shape[1], stepSize):
                 window = image[y:y + windowSize[1], x:x + windowSize[0]]
                 h,w,d = window.shape
                 yield (x, y, h, w, window)
@@ -85,11 +85,11 @@ class VideoUtils:
             scratch_file = self.tmp_folder + self.rnd_folder_label() + '.png'
             im_start = image_part_start['im']
             cv2.imwrite(scratch_file, im_start)
-            im_start = self.slowMotion.read_image(scratch_file)
+            im_start = self.slowMotion.model.read_image(scratch_file)
 
             im_end = image_part_end['im']
             cv2.imwrite(scratch_file, im_end)
-            im_end = self.slowMotion.read_image(scratch_file)
+            im_end = self.slowMotion.model.read_image(scratch_file)
 
             im = self.slowMotion.gen_frame_im(im_start, im_end)
             im.save(scratch_file)
@@ -142,6 +142,8 @@ class VideoUtils:
         self.delete_temp_folder(temp_frames_folder)
         self.delete_temp_folder(temp_slow_frames_folder)
 
-
-# videoUtils = VideoUtils('/media/administrator/E2C8EAECC8EABDC3/tmp/', '/media/administrator/E2C8EAECC8EABDC3/tensorflow/slowmotionpro/voxel-flow/voxel_flow_checkpoints/model.ckpt-360000')
-# videoUtils.slow_down_video('/media/administrator/E2C8EAECC8EABDC3/tensorflow/slowmotionpro/videos/UCF-101/Archery/v_Archery_g01_c01.avi', 'test.avi')
+# DO YOU TEST
+os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+videoUtils = VideoUtils('tmp/', 'models/model')
+videoUtils.slow_down_video('videos/fencing/v_Fencing_g01_c01.avi', 'output_v_Fencing_g01_c01.avi')
