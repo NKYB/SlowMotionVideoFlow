@@ -6,6 +6,7 @@ import shutil
 import glob
 import SlowMotion
 
+
 class VideoUtils:
     def __init__(self, tmp_folder, checkpoint_file="", image_width=128, image_height=128):
         self.tmp_folder = tmp_folder
