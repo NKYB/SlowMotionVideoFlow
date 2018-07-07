@@ -3,6 +3,36 @@ High quality slow motion video generation using deep neural nets and optical flo
 
 Supports many video types through OpenCV and video sizes.
 
+## Requirements
+- Tensorflow
+- OpenCV
+
+## Quickstart
+
+If you just want to slow motion some video. (Model is in the models folder)
+```
+videoUtils = VideoUtils('tmp/', 'models/model')
+videoUtils.slow_down_video('videos/fencing/v_Fencing_g01_c02.avi', 'output_v_Fencing_g01_c02.avi')
+```
+
+If you want to train a new model
+```
+trainer = Train(
+    'tmp/',
+    'models/',
+    'videos/',
+    'avi',
+    128,
+    128
+)
+trainer.train()
+```
+
+#Training Videos
+Info on videos - (http://crcv.ucf.edu/data/UCF101.php)
+
+Download Videos (http://crcv.ucf.edu/data/UCF101/UCF101.rar)
+
 ## Overview
 `Deep Voxel Flow (DVF)` is the author's re-implementation of the video frame synthesizer described in:
 "Video Frame Synthesis using Deep Voxel Flow"
@@ -11,6 +41,7 @@ in International Conference on Computer Vision (ICCV) 2017, Oral Presentation
 
 Further information please contact [Ziwei Liu](https://liuziwei7.github.io/).
 
+## Forked from this project
 https://github.com/liuziwei7/voxel-flow
 
 
