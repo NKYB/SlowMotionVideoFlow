@@ -1,8 +1,11 @@
 from flask import Flask, request
 import VideoUtils
-import urllib
 import shutil
 import os
+try:
+    import urllib.request as urlrequest
+except ImportError:
+    import urllib as urlrequest
 
 app = Flask(__name__) #create the Flask app
 
@@ -14,8 +17,8 @@ os.makedirs(temp_folder)
 checkpoint_file = 'models/model'
 
 #force cpu, if your into that
-os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
+# os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
+# os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 
 @app.route('/')
 def get_url():
@@ -25,7 +28,7 @@ def get_url():
     temp_video_file = temp_folder + videoUtils.rnd_folder_label() + '.avi'
 
     with open(temp_video_file, 'wb') as f:
-        f.write(urllib.request.urlopen(video_url).read())
+        f.write(urlrequest.urlopen(video_url).read())
         f.close()
 
     output_video_file = temp_folder + 'output_' + videoUtils.rnd_folder_label() + '.avi'

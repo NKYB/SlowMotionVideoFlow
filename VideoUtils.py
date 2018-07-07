@@ -136,7 +136,7 @@ class VideoUtils:
         images = glob.glob(temp_slow_frames_folder + "*.png")
         images.sort()
         for image in images:
-            video.write(cv2.imread(os.path.join(temp_slow_frames_folder, image)))
+            video.write(cv2.imread(image))
         cv2.destroyAllWindows()
         video.release()
 
@@ -144,7 +144,5 @@ class VideoUtils:
         self.delete_temp_folder(temp_slow_frames_folder)
 
 # DO YOU TEST
-# os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
-# os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 # videoUtils = VideoUtils('tmp/', 'models/model')
-# videoUtils.slow_down_video('videos/fencing/v_Fencing_g01_c01.avi', 'output_v_Fencing_g01_c01.avi')
+# videoUtils.slow_down_video('videos/fencing/v_Fencing_g01_c02.avi', 'output_v_Fencing_g01_c02.avi')

@@ -2,7 +2,6 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-import tensorflow as tf
 import numpy as np
 import scipy as sp
 import Model
@@ -14,9 +13,6 @@ class SlowMotion:
         self.image_height = image_height
         self.model = Model.Model()
         self.prediction, self.sess = self.model.get(checkpoint_file)
-        # self.sess = tf.Session()
-        # restorer = tf.train.Saver()
-        # restorer.restore(self.sess, checkpoint_file)
 
     def gen_frame(self, image_file_start, image_file_end, output_file):
         batch_data_frame1 = np.array([self.model.read_image(image_file_start)])

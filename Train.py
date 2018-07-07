@@ -5,21 +5,18 @@ from __future__ import print_function
 import os
 import glob
 import tensorflow as tf
-import tensorflow.contrib.slim as slim
 import numpy as np
-import scipy as sp
 import VideoUtils
 import Model
 import cv2
-import random
 
 
 class Train:
-    def __init__(self, tmp_folder, model_output_folder, input_video_folder, output_images_folder, video_extension="avi", image_width=128, image_height=128, learning_rate=0.0003, steps=1100000):
+    def __init__(self, tmp_folder, model_output_folder, input_video_folder, video_extension="avi", image_width=128, image_height=128, learning_rate=0.0003, steps=1100000):
         self.tmp_folder = tmp_folder
         self.model_output_folder = model_output_folder
         self.input_video_folder = input_video_folder
-        self.output_images_folder = output_images_folder
+        self.output_images_folder = self.tmp_folder + 'frames/'
         self.video_extension = video_extension
         self.image_width = image_width
         self.image_height = image_height
@@ -28,11 +25,9 @@ class Train:
         self.output_video_frames_list = self.model_output_folder + 'output_video_frames_list.csv'
 
 
-
     def train(self):
         if not os.path.exists(self.output_video_frames_list):
             print('Create training file, this could take a while :)' + self.output_video_frames_list)
-            exit()
 
             videoUtils = VideoUtils.VideoUtils(self.tmp_folder, '', self.image_width, self.image_height)
             videoUtils.create_temp_folder(self.output_images_folder)
@@ -74,31 +69,9 @@ class Train:
                     f1.close()
 
         model = Model.Model()
-        prediction = model.get()
-
-        reproduction_loss = model.l1_loss(prediction, model.target_placeholder)
-        total_loss = reproduction_loss
-
-        opt = tf.train.AdamOptimizer(self.learning_rate)
-        grads = opt.compute_gradients(total_loss)
-        update_op = opt.apply_gradients(grads)
-
-        summaries = tf.get_collection(tf.GraphKeys.SUMMARIES)
-        summaries.append(tf.summary.scalar('total_loss', total_loss))
-        summaries.append(tf.summary.scalar('reproduction_loss', reproduction_loss))
-        summaries.append(tf.summary.image('Input Image', model.input_placeholder, 3))
-        summaries.append(tf.summary.image('Output Image', prediction, 3))
-        summaries.append(tf.summary.image('Target Image', model.target_placeholder, 3))
-
-        saver = tf.train.Saver(tf.all_variables())
-        summary_op = tf.summary.merge_all()
-        init = tf.initialize_all_variables()
-        sess = tf.Session()
-        sess.run(init)
-        summary_writer = tf.summary.FileWriter(self.model_output_folder,graph=sess.graph)
+        prediction, reproduction_loss, total_loss, update_op, sess, saver = model.get("",self.learning_rate, self.model_output_folder)
 
         offset = os.path.getsize(self.output_video_frames_list) - 1500
-        offset -= 582431524
         f = open(self.output_video_frames_list)
 
         for step in range(0, self.steps):
@@ -127,10 +100,9 @@ class Train:
 
 # DO YOU TEST?
 trainer = Train(
-    '/tmp/',
-    '/mnt/DC7C16307C160644/tensorflow/slowmotionpro/src/models/',
-    '/mnt/DC7C16307C160644/tensorflow/slowmotionpro/videos/UCF-101/',
-    '/mnt/DC7C16307C160644/tensorflow/slowmotionpro/videos/frames/',
+    'tmp/',
+    'models/',
+    'videos/',
     'avi',
     128,
     128

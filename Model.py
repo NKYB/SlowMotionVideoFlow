@@ -12,7 +12,7 @@ class Model:
         self.image_width = image_width
         self.image_height = image_height
 
-    def get(self, checkpoint_file=""):
+    def get(self, checkpoint_file="", learning_rate=0.0003, model_output_folder=""):
         with tf.Graph().as_default():
             self.input_placeholder = tf.placeholder(tf.float32, shape=(None, self.image_height, self.image_width, 6))
             self.target_placeholder = tf.placeholder(tf.float32, shape=(None, self.image_height, self.image_width, 3))
@@ -63,6 +63,7 @@ class Model:
             mask = 0.5 * (1.0 + mask)
             mask = tf.tile(mask, [1, 1, 1, 3])
             prediction = tf.multiply(mask, output_1) + tf.multiply(1.0 - mask, output_2)
+            reproduction_loss = self.l1_loss(prediction, self.target_placeholder)
 
             if checkpoint_file != "":
                 sess = tf.Session()
@@ -70,15 +71,30 @@ class Model:
                 restorer.restore(sess, checkpoint_file)
                 return prediction, sess
             else:
-                return prediction
+                total_loss = reproduction_loss
+
+                opt = tf.train.AdamOptimizer(learning_rate)
+                grads = opt.compute_gradients(total_loss)
+                update_op = opt.apply_gradients(grads)
+
+                summaries = tf.get_collection(tf.GraphKeys.SUMMARIES)
+                summaries.append(tf.summary.scalar('total_loss', total_loss))
+                summaries.append(tf.summary.scalar('reproduction_loss', reproduction_loss))
+                summaries.append(tf.summary.image('Input Image', self.input_placeholder, 3))
+                summaries.append(tf.summary.image('Output Image', prediction, 3))
+                summaries.append(tf.summary.image('Target Image', self.target_placeholder, 3))
+
+                saver = tf.train.Saver(tf.all_variables())
+                summary_op = tf.summary.merge_all()
+                init = tf.initialize_all_variables()
+                sess = tf.Session()
+                sess.run(init)
+                summary_writer = tf.summary.FileWriter(model_output_folder, graph=sess.graph)
+
+                return prediction, reproduction_loss, total_loss, update_op, sess, saver
 
     def l1_loss(self, predictions, targets):
-        """Implements tensorflow l1 loss.
-        Args:
-        Returns:
-        """
-        total_elements = (tf.shape(targets)[0] * tf.shape(targets)[1] * tf.shape(targets)[2]
-                          * tf.shape(targets)[3])
+        total_elements = (tf.shape(targets)[0] * tf.shape(targets)[1] * tf.shape(targets)[2]* tf.shape(targets)[3])
         total_elements = tf.to_float(total_elements)
 
         loss = tf.reduce_sum(tf.abs(predictions - targets))
