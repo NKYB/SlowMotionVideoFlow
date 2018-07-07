@@ -28,22 +28,18 @@ trainer = Train(
 trainer.train()
 ```
 
-#Training Videos
+## Training Videos
 Info on videos - (http://crcv.ucf.edu/data/UCF101.php)
 
 Download Videos (http://crcv.ucf.edu/data/UCF101/UCF101.rar)
 
-## Overview
+## Research Source
 `Deep Voxel Flow (DVF)` is the author's re-implementation of the video frame synthesizer described in:
 "Video Frame Synthesis using Deep Voxel Flow"
 [Ziwei Liu](https://liuziwei7.github.io/), [Raymond A. Yeh](http://www.isle.illinois.edu/~yeh17/), [Xiaoou Tang](http://www.ie.cuhk.edu.hk/people/xotang.shtml), [Yiming Liu](http://bitstream9.me/), [Aseem Agarwala](http://www.agarwala.org/) (CUHK & UIUC & Google Research)
 in International Conference on Computer Vision (ICCV) 2017, Oral Presentation
 
 Further information please contact [Ziwei Liu](https://liuziwei7.github.io/).
-
-## Forked from this project
-https://github.com/liuziwei7/voxel-flow
-
 
 ```
 @inproceedings{liu2017voxelflow,
@@ -54,3 +50,8 @@ https://github.com/liuziwei7/voxel-flow
  year = {2017}
 }
 ```
+
+## Forked from this project
+https://github.com/liuziwei7/voxel-flow
+
+
