@@ -1,6 +1,8 @@
 # SlowMotionVideoFlow
 High quality slow motion video generation using deep neural nets and optical flow.
 
+Supports many video types through OpenCV and video sizes.
+
 ## Overview
 `Deep Voxel Flow (DVF)` is the author's re-implementation of the video frame synthesizer described in:
 "Video Frame Synthesis using Deep Voxel Flow"
@@ -8,6 +10,7 @@ High quality slow motion video generation using deep neural nets and optical flo
 in International Conference on Computer Vision (ICCV) 2017, Oral Presentation
 
 Further information please contact [Ziwei Liu](https://liuziwei7.github.io/).
+
 https://github.com/liuziwei7/voxel-flow
 
 
