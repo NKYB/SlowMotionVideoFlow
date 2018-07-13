@@ -3,7 +3,7 @@ High quality slow motion video generation using deep neural nets and optical flo
 
 Supports many video types through OpenCV and video sizes.
 
-<img src='./images/demo.gif' width=820>
+<img src='./images/demo_image.gif' width=820>
 
 ## Requirements
 - Tensorflow
